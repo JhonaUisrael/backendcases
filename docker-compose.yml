@@ -1,0 +1,34 @@
+version: "3.3"
+
+services:
+ 
+  backedcasesservice:
+    
+    build: 
+      context: .
+      dockerfile: Dockerfiles/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - Logging__LogLevel__Default=Information
+      - Logging__LogLevel__Microsoft.AspNetCore=Warning
+      - ConnectionStrings__DefaultConnection=Server=${MSSQL_HOST};Port=${MSSQL_PORT};Database=${MSSQL_DATABASE};User ID=${MSSQL_USER};Password=${MSSQL_PASS}
+    
+
+
+    ports:
+      - "${PORT}:8080"
+
+
+  casesdb:
+     image: mcr.microsoft.com/mssql/server:2022-latest
+     environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${MSSQL_PASS}
+     ports:
+      - "${MSSQL_PORT}:1433"
+     volumes:
+      - volumen-db_persistencia:/var/opt/mssql
+
+volumes:
+  volumen-db_persistencia:
+  #  external: true
