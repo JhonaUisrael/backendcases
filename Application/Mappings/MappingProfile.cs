@@ -3,16 +3,47 @@ using Domain;
 
 namespace Application;
 
-public class MappingProfile:Profile
+public class MappingProfile : Profile
 {
     public MappingProfile()
     {
          CreateMap<CaseCreateDto, Case>()
-            .ForMember(dest => dest.CaseDescription, opt => opt.MapFrom(src => src.Description))
-            .ForMember(dest => dest.CaseTypeId, opt => opt.MapFrom(src => src.Type))
-            .ForMember(dest => dest.CaseStartDate, opt => opt.MapFrom(src => src.StartDate))
-            .ForMember(dest => dest.CaseEndDate, opt => opt.MapFrom(src => src.EndDate))
-            .ForMember(dest => dest.CasePriority, opt => opt.MapFrom(src => src.Priority));
+            .ConstructUsing(dto => new Case(
+                dto.Description,
+                dto.Type,
+                dto.PersonId,
+                dto.ClientId,
+                dto.StartDate,
+                dto.EndDate,
+                dto.Priority
+            ));
+
+             CreateMap<Case, CaseViewDto>()
+           .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.CaseDescription))
+           .ForMember(dest => dest.CaseNumber, opt => opt.MapFrom(src => src.CaseNumber))
+           .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.CasePriority))
+           .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.CaseState))
+           .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.CaseStartDate))
+            .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.CaseEndDate))
+           .ForMember(dest => dest.Client, opt => opt.MapFrom(src => src.Client))
+           .ForMember(dest => dest.Person, opt => opt.MapFrom(src => src.Person))
+           .ForMember(dest => dest.CaseType, opt => opt.MapFrom(src => src.CaseType));
+
+
+
+             CreateMap<CasesType, CaseTypeViewDto>()
+           .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.CaseName));
+           
+               CreateMap<Person, PersonViewDto>()
+           .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PersonName))
+            .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.PersonLastName))
+            .ForMember(dest => dest.Identification, opt => opt.MapFrom(src => src.PersonIdentification));
+
+               CreateMap<Client, ClientViewDto>()
+           .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ClientName))
+            .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.ClientLastName))
+            .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.ClientPhone))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.ClientEmail));
 
     }
 

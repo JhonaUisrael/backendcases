@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Registrar servicios
 builder.Services.AddScoped<ICaseRepository, CaseRepository>();
 builder.Services.AddScoped<CreateCaseService>();
+builder.Services.AddScoped<GetAllCasesService>();
 
 
 

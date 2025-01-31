@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250131061121_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250131160626_InitialModel")]
+    partial class InitialModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,14 +57,24 @@ namespace Infrastructure.Migrations
                     b.Property<int>("CaseTypeId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("PersonId")
+                        .HasColumnType("int");
 
                     b.HasKey("CaseId");
 
                     b.HasIndex("CaseTypeId");
 
-                    b.ToTable("Cases");
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("Case");
                 });
 
             modelBuilder.Entity("Domain.CaseType", b =>
@@ -86,7 +96,44 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("CaseTypeId");
 
-                    b.ToTable("CasesTypes");
+                    b.ToTable("CasesType");
+                });
+
+            modelBuilder.Entity("Domain.Client", b =>
+                {
+                    b.Property<int>("ClientId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientId"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ClientEmail")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("ClientLastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ClientName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ClientPhone")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ClientId");
+
+                    b.ToTable("Client");
                 });
 
             modelBuilder.Entity("Domain.Person", b =>
@@ -119,22 +166,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("PersonTypeId");
 
-                    b.ToTable("Persons");
-                });
-
-            modelBuilder.Entity("Domain.PersonCase", b =>
-                {
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CaseId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PersonId", "CaseId");
-
-                    b.HasIndex("CaseId");
-
-                    b.ToTable("PersonCases");
+                    b.ToTable("Person");
                 });
 
             modelBuilder.Entity("Domain.PersonType", b =>
@@ -156,7 +188,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("PersonTypeId");
 
-                    b.ToTable("PersonTypes");
+                    b.ToTable("PersonType");
                 });
 
             modelBuilder.Entity("Domain.TaskCase", b =>
@@ -186,7 +218,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CaseId");
 
-                    b.ToTable("TaskCases");
+                    b.ToTable("TaskCase");
                 });
 
             modelBuilder.Entity("Domain.Case", b =>
@@ -197,7 +229,23 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Client", "Client")
+                        .WithMany("Cases")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Person", "Person")
+                        .WithMany("Cases")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("CasesType");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("Domain.Person", b =>
@@ -211,25 +259,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("PersonType");
                 });
 
-            modelBuilder.Entity("Domain.PersonCase", b =>
-                {
-                    b.HasOne("Domain.Case", "Case")
-                        .WithMany("PersonCases")
-                        .HasForeignKey("CaseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Person", "Person")
-                        .WithMany("PersonCases")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Case");
-
-                    b.Navigation("Person");
-                });
-
             modelBuilder.Entity("Domain.TaskCase", b =>
                 {
                     b.HasOne("Domain.Case", "Case")
@@ -241,19 +270,19 @@ namespace Infrastructure.Migrations
                     b.Navigation("Case");
                 });
 
-            modelBuilder.Entity("Domain.Case", b =>
+            modelBuilder.Entity("Domain.CaseType", b =>
                 {
-                    b.Navigation("PersonCases");
+                    b.Navigation("Cases");
                 });
 
-            modelBuilder.Entity("Domain.CaseType", b =>
+            modelBuilder.Entity("Domain.Client", b =>
                 {
                     b.Navigation("Cases");
                 });
 
             modelBuilder.Entity("Domain.Person", b =>
                 {
-                    b.Navigation("PersonCases");
+                    b.Navigation("Cases");
                 });
 
             modelBuilder.Entity("Domain.PersonType", b =>

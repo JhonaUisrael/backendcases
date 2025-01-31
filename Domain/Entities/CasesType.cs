@@ -1,6 +1,6 @@
 ﻿namespace Domain;
 
-public class CaseType
+public class CasesType
 {
     public int CaseTypeId { get; set; } // PK, Identity
     public string CaseName { get; set; }

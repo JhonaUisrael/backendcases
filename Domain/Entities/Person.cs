@@ -16,7 +16,8 @@ public class Person
     public int PersonTypeId { get; set; }
     public PersonType PersonType { get; set; }
 
+    public ICollection<Case>  Cases { get; set; }
+
     // Relación muchos a muchos con Cases
-    public ICollection<PersonCase> PersonCases { get; set; }
 }
 

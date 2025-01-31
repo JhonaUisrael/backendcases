@@ -29,6 +29,7 @@ CREATE TABLE [Cases] (
 	[caseState] nvarchar(max) DEFAULT '30',
 	[createdAt] datetime NOT NULL DEFAULT 'getDate()',
 	[active] nvarchar(max) NOT NULL DEFAULT 1,
+	[clientId] int NOT NULL,
 	PRIMARY KEY ([caseId])
 );
 
@@ -50,10 +51,23 @@ CREATE TABLE [TaskCase] (
 	PRIMARY KEY ([taskId])
 );
 
+CREATE TABLE [Client] (
+	[clientId] int IDENTITY(1,1) NOT NULL UNIQUE,
+	[clientName] nvarchar(max) NOT NULL DEFAULT '100',
+	[clienteLastName] nvarchar(max) NOT NULL DEFAULT '100',
+	[clientPhone] nvarchar(max) NOT NULL DEFAULT '20',
+	[clientEmail] nvarchar(max) NOT NULL DEFAULT '150',
+	[createdAt] datetime NOT NULL DEFAULT 'getDate()',
+	[active] nvarchar(max) NOT NULL DEFAULT 1,
+	PRIMARY KEY ([clientId])
+);
+
 ALTER TABLE [Person] ADD CONSTRAINT [Person_fk6] FOREIGN KEY ([personTypeId]) REFERENCES [PersonType]([personTypeId]);
 
 ALTER TABLE [Cases] ADD CONSTRAINT [Cases_fk3] FOREIGN KEY ([caseTypeId]) REFERENCES [CasesType]([caseTypeId]);
 
 ALTER TABLE [Cases] ADD CONSTRAINT [Cases_fk7] FOREIGN KEY ([personId]) REFERENCES [Person]([personId]);
+
+ALTER TABLE [Cases] ADD CONSTRAINT [Cases_fk11] FOREIGN KEY ([clientId]) REFERENCES [Client]([clientId]);
 
 ALTER TABLE [TaskCase] ADD CONSTRAINT [TaskCase_fk2] FOREIGN KEY ([caseId]) REFERENCES [Cases]([caseId]);

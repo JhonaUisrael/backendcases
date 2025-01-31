@@ -9,6 +9,10 @@ public class Case
     public string CaseNumber { get; set; }
     public string CaseDescription { get; set; }
     public int CaseTypeId { get; set; }
+    public int PersonId { get; set; }
+
+    public int ClientId { get; set; }
+
     public DateTime CaseStartDate { get; set; }
     public DateTime CaseEndDate { get; set; }
     public string CasePriority { get; set; }
@@ -17,20 +21,23 @@ public class Case
     public bool Active { get; set; } = true;
 
     // Relación con CasesType
-    public CaseType CasesType { get; set; }
+    public CasesType CaseType { get; set; }
 
-    // Relación muchos a muchos con Person
-    public ICollection<PersonCase> PersonCases { get; set; }
+    public Person Person { get; set; }
 
-public Case()
-{
-    
-}
-     public Case( string caseDescription, int caseTypeId, DateTime caseStartDate, DateTime caseEndDate, string casePriority)
+    public Client Client { get; set; }
+
+    public Case()
     {
-        CaseNumber = "caseNumber";
+
+    }
+    public Case(string caseDescription, int caseTypeId, int personId, int clientId, DateTime caseStartDate, DateTime caseEndDate, string casePriority)
+    {
+        CaseNumber =CaseNumberValObj.Generate().ToString();
         CaseDescription = caseDescription;
         CaseTypeId = caseTypeId;
+        PersonId = personId;
+        ClientId = clientId;
         CaseStartDate = caseStartDate;
         CaseEndDate = caseEndDate;
         CasePriority = casePriority;
