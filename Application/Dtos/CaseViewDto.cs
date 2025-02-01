@@ -13,7 +13,7 @@ public class CaseViewDto
     // Relación con CasesType
     public CaseTypeViewDto CaseType { get; set; }
 
-    public PersonViewDto Person { get; set; }
+    public PersonViewDto AsignedTo { get; set; }
 
     public ClientViewDto Client { get; set; }
 
