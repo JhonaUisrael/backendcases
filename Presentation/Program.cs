@@ -15,7 +15,9 @@ builder.Services.AddScoped<ICaseRepository, CaseRepository>();
 builder.Services.AddScoped<CreateCaseService>();
 builder.Services.AddScoped<GetAllCasesService>();
 
-
+builder.Services.AddScoped<ITaskCaseRepository, TaskCaseRepository>();
+builder.Services.AddScoped<CreateTaskCaseService>();
+builder.Services.AddScoped<GetByCaseTaskCaseService>();
 
 // Persistencia
 builder.Services.AddDbContext<AppDbContext>(options=>
